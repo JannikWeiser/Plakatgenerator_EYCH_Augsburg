@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EYCH Augsburg – Dein Story-Bild</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="page">
+    <header class="page__header">
+      <h1>EYCH Augsburg – Story Generator</h1>
+      <p>Lade dein Foto hoch, positioniere es und lade dein persönliches Story-Bild herunter. Dein Foto wird ausschließlich in deinem Browser verarbeitet und nirgendwo hochgeladen oder gespeichert.</p>
+    </header>
+
+    <main class="layout">
+      <section class="editor">
+        <div class="stage" id="stage">
+          <canvas id="previewCanvas" width="1080" height="1920"></canvas>
+          <div class="stage__hint" id="stageHint">Foto hochladen, um zu starten</div>
+        </div>
+
+        <div class="controls" id="photoControls" hidden>
+          <label class="control">
+            <span>Zoom</span>
+            <input type="range" id="zoomRange" min="1" max="3" step="0.01" value="1">
+          </label>
+          <p class="hint">Tipp: Foto mit der Maus / dem Finger verschieben, um den Ausschnitt anzupassen.</p>
+        </div>
+      </section>
+
+      <section class="form">
+        <label class="field">
+          <span>Dein Foto</span>
+          <input type="file" id="photoInput" accept="image/*">
+        </label>
+
+        <label class="field">
+          <span>Dein Name</span>
+          <input type="text" id="nameInput" maxlength="40" placeholder="Vorname Nachname">
+        </label>
+
+        <button id="downloadBtn" class="button" disabled>Bild herunterladen</button>
+        <p class="privacy-note">🔒 Alles läuft lokal in deinem Browser ab. Es werden keine Bilder oder Namen an einen Server gesendet oder gespeichert.</p>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

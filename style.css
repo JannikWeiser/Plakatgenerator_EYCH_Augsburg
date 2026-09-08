@@ -1,0 +1,176 @@
+@font-face {
+  font-family: "WorldClimbingBold";
+  src: url("assets/fonts/WorldClimbing-Bold.otf") format("opentype");
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "AntarcticanMono";
+  src: url("assets/fonts/AntarcticanMono-Book.ttf") format("truetype");
+  font-weight: 400;
+  font-display: swap;
+}
+
+:root {
+  --ink: #03111f;
+  --pink: #ec0c8c;
+  --bg: #f4f4f6;
+  --card: #ffffff;
+  --border: #e2e2e7;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 20px 64px;
+}
+
+.page__header h1 {
+  font-size: 28px;
+  margin: 0 0 8px;
+}
+
+.page__header p {
+  margin: 0 0 32px;
+  color: #555;
+  max-width: 640px;
+  line-height: 1.5;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(260px, 400px) 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+@media (max-width: 720px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.editor {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1080 / 1920;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  touch-action: none;
+  cursor: grab;
+}
+
+.stage:active {
+  cursor: grabbing;
+}
+
+.stage canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.stage__hint {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px;
+  color: #999;
+  font-size: 14px;
+  pointer-events: none;
+}
+
+.controls {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.control {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+}
+
+.control input[type="range"] {
+  flex: 1;
+}
+
+.hint {
+  margin: 12px 0 0;
+  font-size: 13px;
+  color: #777;
+}
+
+.form {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  height: fit-content;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.field input {
+  font: inherit;
+  font-weight: 400;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.button {
+  background: var(--pink);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 14px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.privacy-note {
+  margin: 0;
+  font-size: 13px;
+  color: #777;
+  line-height: 1.4;
+}
