@@ -22,6 +22,10 @@ const NAME_POS = { x: 40, y: 1760, size: 65 };
 const DOMAIN_POS = { x: 44, yBottom: 1420, size: 26 };
 
 const FONT_FAMILY = "WorldClimbingBold";
+// WorldClimbingBold hat keine Ziffern/&-Zeichen, darum fürs Datum eine
+// Schrift mit vollständigem Zeichensatz nutzen, statt browserseitigem
+// Fallback (der uneinheitliche Strichstärken verursacht).
+const DATE_FONT_FAMILY = "AntarcticanMono";
 
 // ---- Setup ----
 const canvas = document.getElementById("previewCanvas");
@@ -97,7 +101,7 @@ function drawTexts() {
   ctx.font = `${TITLE_POS.size}px "${FONT_FAMILY}"`;
   ctx.fillText(TITLE_TEXT, TITLE_POS.x, TITLE_POS.y);
 
-  ctx.font = `${DATE_POS.size}px "${FONT_FAMILY}"`;
+  ctx.font = `${DATE_POS.size}px "${DATE_FONT_FAMILY}"`;
   DATE_LINES.forEach((line, i) => {
     ctx.fillText(line, DATE_POS.x, DATE_POS.y + i * DATE_POS.lineHeight);
   });
@@ -241,12 +245,12 @@ async function init() {
   assets.logo = logo;
 
   try {
-    const face = new FontFace(
-      FONT_FAMILY,
-      `url(assets/fonts/WorldClimbing-Bold.otf)`
-    );
-    await face.load();
-    document.fonts.add(face);
+    const [titleFace, dateFace] = await Promise.all([
+      new FontFace(FONT_FAMILY, `url(assets/fonts/WorldClimbing-Bold.otf)`).load(),
+      new FontFace(DATE_FONT_FAMILY, `url(assets/fonts/AntarcticanMono-Book.ttf)`).load(),
+    ]);
+    document.fonts.add(titleFace);
+    document.fonts.add(dateFace);
   } catch (e) {
     console.warn("Font konnte nicht geladen werden, Fallback wird genutzt.", e);
   }
