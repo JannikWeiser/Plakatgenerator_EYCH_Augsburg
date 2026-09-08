@@ -1,5 +1,5 @@
 // ---- Feste Inhalte (hier später einfach anpassen) ----
-const TITLE_TEXT = "EYCH Augsburg";
+const TITLE_TEXT = "AUGSBURG";
 const DATE_TEXT = "September 19th & 20th";
 const TEXT_COLOR = "#03111F";
 
@@ -12,10 +12,10 @@ const PHOTO_BOX = { x: 100, y: 409, w: 980, h: 1511 };
 // Logo-Box: rechts/oben ausgerichtet, Größe passt sich dem Logo-Seitenverhältnis an
 const LOGO_BOX = { right: 1043, top: 35, maxW: 340, maxH: 210 };
 
-// Textpositionen (x, Baseline-y), aus dem Original-Design übernommen
-const TITLE_POS = { x: 40, y: 1293, size: 125 };
-const DATE_POS = { x: 45, y: 1484, size: 65 };
-const NAME_POS = { x: 42, y: 1601, size: 65 };
+// Textpositionen (x, Baseline-y): Titel oben über dem Foto, Datum & Name unten darunter
+const TITLE_POS = { x: 230, y: 430, size: 100 };
+const DATE_POS = { x: 40, y: 1580, size: 65 };
+const NAME_POS = { x: 40, y: 1700, size: 65 };
 
 const FONT_FAMILY = "WorldClimbingBold";
 
