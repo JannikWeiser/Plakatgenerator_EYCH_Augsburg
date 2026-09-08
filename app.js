@@ -1,6 +1,6 @@
 // ---- Feste Inhalte (hier später einfach anpassen) ----
 const TITLE_TEXT = "AUGSBURG";
-const DATE_TEXT = "September 19th & 20th";
+const DATE_LINES = ["September", "19th & 20th"];
 const TEXT_COLOR = "#03111F";
 
 const CANVAS_W = 1080;
@@ -14,8 +14,8 @@ const LOGO_BOX = { right: 1043, top: 35, maxW: 340, maxH: 210 };
 
 // Textpositionen (x, Baseline-y): Titel oben über dem Foto, Datum & Name unten darunter
 const TITLE_POS = { x: 230, y: 430, size: 100 };
-const DATE_POS = { x: 40, y: 1580, size: 65 };
-const NAME_POS = { x: 40, y: 1700, size: 65 };
+const DATE_POS = { x: 40, y: 1560, size: 65, lineHeight: 80 };
+const NAME_POS = { x: 40, y: 1760, size: 65 };
 
 const FONT_FAMILY = "WorldClimbingBold";
 
@@ -94,7 +94,9 @@ function drawTexts() {
   ctx.fillText(TITLE_TEXT, TITLE_POS.x, TITLE_POS.y);
 
   ctx.font = `${DATE_POS.size}px "${FONT_FAMILY}"`;
-  ctx.fillText(DATE_TEXT, DATE_POS.x, DATE_POS.y);
+  DATE_LINES.forEach((line, i) => {
+    ctx.fillText(line, DATE_POS.x, DATE_POS.y + i * DATE_POS.lineHeight);
+  });
 
   const name = nameInput.value.trim();
   if (name) {
