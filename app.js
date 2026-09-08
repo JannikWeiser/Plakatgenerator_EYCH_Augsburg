@@ -1,6 +1,7 @@
 // ---- Feste Inhalte (hier später einfach anpassen) ----
 const TITLE_TEXT = "AUGSBURG";
 const DATE_LINES = ["September", "19th & 20th"];
+const DOMAIN_TEXT = "www.dav-kletterzentrum-augsburg.de";
 const TEXT_COLOR = "#03111F";
 
 const CANVAS_W = 1080;
@@ -16,6 +17,9 @@ const LOGO_BOX = { right: 1043, top: 35, maxW: 340, maxH: 210 };
 const TITLE_POS = { x: 230, y: 430, size: 100 };
 const DATE_POS = { x: 40, y: 1560, size: 65, lineHeight: 80 };
 const NAME_POS = { x: 40, y: 1760, size: 65 };
+
+// Domain am linken Rand, um 90° gedreht (liest von unten nach oben)
+const DOMAIN_POS = { x: 44, yBottom: 1420, size: 26 };
 
 const FONT_FAMILY = "WorldClimbingBold";
 
@@ -103,6 +107,13 @@ function drawTexts() {
     ctx.font = `${NAME_POS.size}px "${FONT_FAMILY}"`;
     ctx.fillText(name, NAME_POS.x, NAME_POS.y);
   }
+
+  ctx.save();
+  ctx.translate(DOMAIN_POS.x, DOMAIN_POS.yBottom);
+  ctx.rotate(-Math.PI / 2);
+  ctx.font = `${DOMAIN_POS.size}px "${FONT_FAMILY}"`;
+  ctx.fillText(DOMAIN_TEXT, 0, 0);
+  ctx.restore();
 }
 
 function render() {
