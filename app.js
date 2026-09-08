@@ -144,9 +144,14 @@ function render() {
 }
 
 // ---- Interaktion: Ziehen zum Verschieben ----
+// Maus: ein Klick+Ziehen reicht (kein Scroll-Konflikt auf dem Desktop).
+// Touch: die Seite soll mit einem Finger weiter scrollbar bleiben, darum
+// wird das Foto dort erst mit zwei Fingern verschoben (wie z. B. bei
+// eingebetteten Karten üblich).
 let dragging = false;
 let dragStart = { x: 0, y: 0 };
 let panStart = { x: 0, y: 0 };
+const activeTouches = new Map(); // pointerId -> {x, y}
 
 function canvasScaleFactor() {
   const rect = stage.getBoundingClientRect();
@@ -157,17 +162,55 @@ function pointerPos(evt) {
   return { x: evt.clientX, y: evt.clientY };
 }
 
+function touchCentroid() {
+  const pts = [...activeTouches.values()];
+  const sum = pts.reduce((a, p) => ({ x: a.x + p.x, y: a.y + p.y }), { x: 0, y: 0 });
+  return { x: sum.x / pts.length, y: sum.y / pts.length };
+}
+
+function startDrag(pos) {
+  dragging = true;
+  dragStart = pos;
+  panStart = { x: state.panX, y: state.panY };
+}
+
+function tryCapture(pointerId) {
+  try {
+    stage.setPointerCapture(pointerId);
+  } catch (e) {
+    // Capture ist nur ein "nice to have" (hält das Dragging auch bei
+    // schnellen Bewegungen über den Rand hinaus stabil) - falls es aus
+    // irgendeinem Grund fehlschlägt, soll das Verschieben trotzdem
+    // funktionieren.
+  }
+}
+
 stage.addEventListener("pointerdown", (evt) => {
   if (!userImg) return;
-  dragging = true;
-  stage.setPointerCapture(evt.pointerId);
-  dragStart = pointerPos(evt);
-  panStart = { x: state.panX, y: state.panY };
+
+  if (evt.pointerType === "touch") {
+    activeTouches.set(evt.pointerId, pointerPos(evt));
+    if (activeTouches.size === 2) {
+      tryCapture(evt.pointerId);
+      startDrag(touchCentroid());
+    }
+    return;
+  }
+
+  tryCapture(evt.pointerId);
+  startDrag(pointerPos(evt));
 });
 
 stage.addEventListener("pointermove", (evt) => {
+  if (evt.pointerType === "touch") {
+    if (!activeTouches.has(evt.pointerId)) return;
+    activeTouches.set(evt.pointerId, pointerPos(evt));
+    if (activeTouches.size < 2 || !dragging) return;
+    evt.preventDefault();
+  }
+
   if (!dragging) return;
-  const p = pointerPos(evt);
+  const p = evt.pointerType === "touch" ? touchCentroid() : pointerPos(evt);
   const f = canvasScaleFactor();
   state.panX = panStart.x + (p.x - dragStart.x) * f;
   state.panY = panStart.y + (p.y - dragStart.y) * f;
@@ -175,6 +218,11 @@ stage.addEventListener("pointermove", (evt) => {
 });
 
 function endDrag(evt) {
+  if (evt.pointerType === "touch") {
+    activeTouches.delete(evt.pointerId);
+    if (activeTouches.size < 2) dragging = false;
+    return;
+  }
   dragging = false;
 }
 stage.addEventListener("pointerup", endDrag);
