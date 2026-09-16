@@ -27,6 +27,79 @@ const FONT_FAMILY = "WorldClimbingBold";
 // Fallback (der uneinheitliche Strichstärken verursacht).
 const DATE_FONT_FAMILY = "AntarcticanMono";
 
+// ---- Sprache (nur Seitentexte - das Bild selbst bleibt unverändert) ----
+const TRANSLATIONS = {
+  de: {
+    title: "EYCH Augsburg – Story Generator",
+    intro:
+      "Lade dein Foto hoch, positioniere es und lade dein persönliches Story-Bild herunter. Dein Foto wird ausschließlich in deinem Browser verarbeitet und nirgendwo hochgeladen oder gespeichert.",
+    stageHint: "Foto hochladen, um zu starten",
+    zoom: "Zoom",
+    dragHint:
+      "Tipp: Foto mit der Maus ziehen (am Handy: mit zwei Fingern), um den Ausschnitt anzupassen. Mit einem Finger kannst du die Seite ganz normal weiterscrollen.",
+    photoLabel: "Dein Foto",
+    textLabel: "Dein Text",
+    textPlaceholder: "z. B. dein Name",
+    downloadBtn: "Bild herunterladen",
+    privacyNote:
+      "🔒 Alles läuft lokal in deinem Browser ab. Es werden keine Bilder oder Namen an einen Server gesendet oder gespeichert.",
+  },
+  en: {
+    title: "EYCH Augsburg – Story Generator",
+    intro:
+      "Upload your photo, position it, and download your personal story image. Your photo is processed entirely in your browser and never uploaded or stored anywhere.",
+    stageHint: "Upload a photo to get started",
+    zoom: "Zoom",
+    dragHint:
+      "Tip: drag the photo with your mouse (on mobile: with two fingers) to adjust the crop. With one finger you can keep scrolling the page normally.",
+    photoLabel: "Your photo",
+    textLabel: "Your text",
+    textPlaceholder: "e.g. your name",
+    downloadBtn: "Download image",
+    privacyNote:
+      "🔒 Everything runs locally in your browser. No images or names are ever sent to or stored on a server.",
+  },
+};
+
+const LANG_STORAGE_KEY = "eych-lang";
+
+function applyLanguage(lang) {
+  const t = TRANSLATIONS[lang] || TRANSLATIONS.de;
+  document.documentElement.lang = lang;
+  document.querySelectorAll("[data-i18n]").forEach((el) => {
+    const key = el.getAttribute("data-i18n");
+    if (t[key]) el.textContent = t[key];
+  });
+  document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
+    const key = el.getAttribute("data-i18n-placeholder");
+    if (t[key]) el.placeholder = t[key];
+  });
+  document.querySelectorAll("[data-lang-btn]").forEach((btn) => {
+    btn.setAttribute("aria-pressed", String(btn.dataset.langBtn === lang));
+  });
+  try {
+    localStorage.setItem(LANG_STORAGE_KEY, lang);
+  } catch (e) {
+    // localStorage kann in manchen Kontexten (z. B. privates Fenster mit
+    // blockiertem Speicher) fehlschlagen - dann merken wir uns die Wahl
+    // eben nur für diese Sitzung.
+  }
+}
+
+function initLanguage() {
+  let saved = null;
+  try {
+    saved = localStorage.getItem(LANG_STORAGE_KEY);
+  } catch (e) {
+    // s.o.
+  }
+  applyLanguage(saved === "en" ? "en" : "de");
+
+  document.querySelectorAll("[data-lang-btn]").forEach((btn) => {
+    btn.addEventListener("click", () => applyLanguage(btn.dataset.langBtn));
+  });
+}
+
 // ---- Setup ----
 const canvas = document.getElementById("previewCanvas");
 const ctx = canvas.getContext("2d");
@@ -306,4 +379,5 @@ async function init() {
   render();
 }
 
+initLanguage();
 init();
