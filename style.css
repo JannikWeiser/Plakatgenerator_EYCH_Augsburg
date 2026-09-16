@@ -222,48 +222,6 @@ body {
   line-height: 1.4;
 }
 
-.save-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 1000;
-  background: rgba(0, 0, 0, 0.92);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  padding: 24px;
-}
-
-.save-overlay__hint {
-  color: #fff;
-  font-size: 15px;
-  text-align: center;
-  margin: 0;
-  max-width: 320px;
-}
-
-.save-overlay__img {
-  max-width: min(90vw, 360px);
-  max-height: 70vh;
-  border-radius: 8px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-}
-
-.save-overlay__close {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: none;
-  background: rgba(255, 255, 255, 0.15);
-  color: #fff;
-  font-size: 18px;
-  cursor: pointer;
-}
-
 .page__footer {
   margin-top: 40px;
   padding-top: 16px;
