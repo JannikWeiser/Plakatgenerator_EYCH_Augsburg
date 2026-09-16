@@ -43,8 +43,6 @@ const TRANSLATIONS = {
     downloadBtn: "Bild herunterladen",
     privacyNote:
       "🔒 Alles läuft lokal in deinem Browser ab. Es werden keine Bilder oder Namen an einen Server gesendet oder gespeichert.",
-    appBrowserNote:
-      "⚠️ Du bist im Instagram-Browser: Tippe oben rechts auf ⋯ und wähle „Im Browser öffnen\" – dann funktioniert der Download normal.",
   },
   en: {
     title: "EYCH Augsburg – Story Generator",
@@ -60,8 +58,6 @@ const TRANSLATIONS = {
     downloadBtn: "Download image",
     privacyNote:
       "🔒 Everything runs locally in your browser. No images or names are ever sent to or stored on a server.",
-    appBrowserNote:
-      "⚠️ You're in Instagram's in-app browser: tap ⋯ in the top right and choose \"Open in Browser\" for the download to work normally.",
   },
 };
 
@@ -119,14 +115,6 @@ const nameInput = document.getElementById("nameInput");
 const zoomRange = document.getElementById("zoomRange");
 const photoControls = document.getElementById("photoControls");
 const downloadBtn = document.getElementById("downloadBtn");
-const appBrowserNote = document.getElementById("appBrowserNote");
-
-// Instagram (und ähnliche In-App-Browser) blockieren echte Datei-Downloads
-// (a[download] / Blob-URLs). Dort zeigen wir das Bild stattdessen groß an,
-// damit man es per Fingerdruck ("Bild sichern") speichern kann.
-function isInAppBrowser() {
-  return /Instagram|FBAN|FBAV|FB_IAB|Line\//i.test(navigator.userAgent);
-}
 
 function loadImage(src) {
   return new Promise((resolve) => {
@@ -348,11 +336,6 @@ photoInput.addEventListener("change", async () => {
 });
 
 downloadBtn.addEventListener("click", () => {
-  if (isInAppBrowser()) {
-    appBrowserNote.scrollIntoView({ behavior: "smooth", block: "center" });
-    return;
-  }
-
   render();
   canvas.toBlob((blob) => {
     const url = URL.createObjectURL(blob);
@@ -394,10 +377,6 @@ async function init() {
   }
 
   render();
-}
-
-if (isInAppBrowser()) {
-  appBrowserNote.hidden = false;
 }
 
 initLanguage();

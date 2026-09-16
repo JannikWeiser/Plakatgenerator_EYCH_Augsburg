@@ -211,17 +211,6 @@ body {
   line-height: 1.4;
 }
 
-.app-browser-note {
-  margin: 0;
-  font-size: 13px;
-  color: #92400e;
-  background: #fff7ed;
-  border: 1px solid #fed7aa;
-  border-radius: 8px;
-  padding: 10px 12px;
-  line-height: 1.4;
-}
-
 .page__footer {
   margin-top: 40px;
   padding-top: 16px;
