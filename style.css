@@ -211,6 +211,44 @@ body {
   line-height: 1.4;
 }
 
+/* Fallback fuer In-App-Browser (z.B. Instagram), wenn Web Share nicht
+   klappt: bewusst normaler Seiteninhalt statt eines fixen Overlays, damit
+   nichts "haengen bleiben" kann. */
+.inapp-save {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 16px;
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  border-radius: 8px;
+}
+
+.inapp-save__hint {
+  margin: 0;
+  font-size: 13px;
+  color: #92400e;
+  text-align: center;
+}
+
+.inapp-save__img {
+  max-width: 100%;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+}
+
+.inapp-save__close {
+  font: inherit;
+  font-size: 13px;
+  background: none;
+  border: none;
+  color: #92400e;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 4px;
+}
+
 .page__footer {
   margin-top: 40px;
   padding-top: 16px;
