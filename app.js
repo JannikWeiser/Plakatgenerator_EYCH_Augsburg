@@ -43,8 +43,8 @@ const TRANSLATIONS = {
     downloadBtn: "Bild herunterladen",
     privacyNote:
       "🔒 Alles läuft lokal in deinem Browser ab. Es werden keine Bilder oder Namen an einen Server gesendet oder gespeichert.",
-    inAppSaveHint: "Bild gedrückt halten und „Bild sichern\" wählen.",
-    inAppSaveClose: "Ausblenden",
+    appBrowserNote:
+      "⚠️ Der Download funktioniert im Instagram-Browser leider nicht. Tippe oben rechts auf ⋯ und wähle „Im Browser öffnen\".",
   },
   en: {
     title: "EYCH Augsburg – Story Generator",
@@ -60,8 +60,8 @@ const TRANSLATIONS = {
     downloadBtn: "Download image",
     privacyNote:
       "🔒 Everything runs locally in your browser. No images or names are ever sent to or stored on a server.",
-    inAppSaveHint: "Press and hold the image, then choose \"Save Image\".",
-    inAppSaveClose: "Hide",
+    appBrowserNote:
+      "⚠️ Downloading doesn't work in Instagram's in-app browser. Tap ⋯ in the top right and choose \"Open in Browser\".",
   },
 };
 
@@ -119,27 +119,13 @@ const nameInput = document.getElementById("nameInput");
 const zoomRange = document.getElementById("zoomRange");
 const photoControls = document.getElementById("photoControls");
 const downloadBtn = document.getElementById("downloadBtn");
-const inAppSave = document.getElementById("inAppSave");
-const inAppSaveImg = document.getElementById("inAppSaveImg");
-const inAppSaveClose = document.getElementById("inAppSaveClose");
+const appBrowserNote = document.getElementById("appBrowserNote");
 
-// Instagram (und aehnliche In-App-Browser) blockieren echte Datei-Downloads
-// (a[download] / Blob-URLs). Dort versuchen wir zuerst die Web Share API
-// (oeffnet das native "Sichern"-Menue); wenn die nicht verfuegbar ist oder
-// fehlschlaegt, zeigen wir das Bild als normalen Seiteninhalt an (kein
-// Overlay!), damit man es per Fingerdruck speichern kann.
+// Instagrams (und aehnlicher In-App-Browser) blockiert echte Datei-Downloads
+// (a[download] / Blob-URLs) - dagegen laesst sich nichts zuverlaessig
+// umgehen. Wir zeigen dort nur einen Hinweis, im echten Browser zu oeffnen.
 function isInAppBrowser() {
   return /Instagram|FBAN|FBAV|FB_IAB|Line\//i.test(navigator.userAgent);
-}
-
-inAppSaveClose.addEventListener("click", () => {
-  inAppSave.hidden = true;
-});
-
-function showInAppSaveFallback() {
-  inAppSaveImg.src = canvas.toDataURL("image/png");
-  inAppSave.hidden = false;
-  inAppSave.scrollIntoView({ behavior: "smooth", block: "center" });
 }
 
 function loadImage(src) {
@@ -361,43 +347,12 @@ photoInput.addEventListener("change", async () => {
   render();
 });
 
-downloadBtn.addEventListener("click", async () => {
+downloadBtn.addEventListener("click", () => {
   render();
-  inAppSave.hidden = true;
-
-  const namePart = nameInput.value.trim().replace(/\s+/g, "_") || "EYCH_Augsburg";
-
-  if (isInAppBrowser()) {
-    const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
-    if (!blob) {
-      showInAppSaveFallback();
-      return;
-    }
-
-    let file = null;
-    try {
-      file = new File([blob], `${namePart}_Story.png`, { type: "image/png" });
-    } catch (e) {
-      file = null; // sehr alte Browser ohne File-Konstruktor
-    }
-
-    if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
-      try {
-        await navigator.share({ files: [file] });
-        return; // erfolgreich geteilt/gespeichert
-      } catch (err) {
-        if (err && err.name === "AbortError") return; // Nutzer hat abgebrochen
-        // sonst: unten auf die Bild-Anzeige zurückfallen
-      }
-    }
-
-    showInAppSaveFallback();
-    return;
-  }
-
   canvas.toBlob((blob) => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
+    const namePart = nameInput.value.trim().replace(/\s+/g, "_") || "EYCH_Augsburg";
     a.href = url;
     a.download = `${namePart}_Story.png`;
     document.body.appendChild(a);
@@ -434,6 +389,10 @@ async function init() {
   }
 
   render();
+}
+
+if (isInAppBrowser()) {
+  appBrowserNote.hidden = false;
 }
 
 initLanguage();
